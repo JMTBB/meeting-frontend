@@ -23,6 +23,14 @@ export default {
   data() {
     return {
       search: "",
+      tableHeader: [
+        { text: "会议主题", value: "meetingName" },
+        { text: "开始时间", value: "beginTime" },
+        { text: "结束时间", value: "endTime" },
+        { text: "会议宾馆", value: "meetingHotel" },
+        { text: "会议地点", value: "meetingLocation" },
+
+      ],
       headers: [
         {
           text: "Dessert (100g serving)",

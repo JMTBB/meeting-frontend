@@ -64,7 +64,7 @@
                   <small>还没有账号？注册一个</small>
                 </router-link>
                 <v-spacer />
-                <v-btn :disabled="!valid" color="primary" @click="loading = true">登录</v-btn>
+                <v-btn :disabled="!valid" color="primary" @click="handleSubmit">登录</v-btn>
               </v-card-actions>
               <v-progress-linear
                 :active="loading"
@@ -82,6 +82,8 @@
 </template>
 
 <script>
+import { requestLogin } from "@/api/api";
+
 export default {
   data: () => ({
     info: {
@@ -91,11 +93,9 @@ export default {
     valid: true,
     accountRules: [
       v => !!v || "请输入账号",
-      v => (v && v.length <= 10) || "账号小于10位",
+      v => (v && v.length <= 10) || "账号小于10位"
     ],
-    passwordRules: [
-      v => !!v || '请输入密码'
-    ],
+    passwordRules: [v => !!v || "请输入密码"],
     loading: false
   }),
   props: {
@@ -103,13 +103,32 @@ export default {
   },
   methods: {
     handleSubmit() {
+      this.loading = true;
+      var subInfo = {
+        loginId: this.info.account,
+        loginPassword: this.info.password,
+        loginName: "",
+        isAdmin: false
+      };
+      requestLogin(subInfo).then(dataBack => {
+        let {message, code, data } = dataBack;
+        if(code != 200) {
+          message.length;
+          console.log("ttt");
+        }else {
+          data.length;
+          // window.localStorage.setItem("user", JSON.stringify(data)); 
+          this.loading = false;
+          this.$router.push({path: '/home/table'});
+        }
+      })
     }
   },
   watch: {
-    loading(val) {
-      if (!val) return;
-      setTimeout(() => (this.loading = false), 3000);
-    },
+    // loading(val) {
+    //   if (!val) return;
+    //   setTimeout(() => (this.loading = false), 3000);
+    // }
   }
 };
 </script>
