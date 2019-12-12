@@ -5,43 +5,31 @@
         <v-card-title>
           会议列表
           <v-spacer></v-spacer>
-          <v-text-field v-model="search" append-icon="search" label="搜索" single-line hide-details></v-text-field>
+          <v-text-field
+            v-model="search"
+            append-icon="search"
+            label="搜索"
+            single-line
+            hide-details
+          ></v-text-field>
         </v-card-title>
-        <v-data-table 
-        :headers="tableHeader" 
-        :items="tableContent" 
-        :search="search"
-        :loading="loading"
-        loading-text="加载中..."
-        ></v-data-table>
+        <v-data-table :headers="headers" :items="desserts" :search="search"></v-data-table>
       </v-card>
     </v-col>
   </v-row>
 </template>
 <script>
-import { getMeeting } from "@/api/api";
 export default {
   data() {
     return {
-      loading: true,
       search: "",
-      tableHeader: [
+      meetingHeader: [
         { text: "会议主题", value: "meetingName" },
-        { text: "会议编号", value: "meetingId" },
-        { text: "会议描述", value: "meetingDescription" },
         { text: "开始时间", value: "beginTime" },
         { text: "结束时间", value: "endTime" },
-        { text: "会议地点", value: "meetingLocation" }
-      ],
-      tableContent: [
-        {
-          meetingName: null,
-          meetingId: 0,
-          meetingDescription: null,
-          beginTime: null,
-          endTime: null,
-          meetingLocation: null
-        }
+        { text: "会议宾馆", value: "meetingHotel" },
+        { text: "会议地点", value: "meetingLocation" },
+
       ],
       headers: [
         {
@@ -139,21 +127,6 @@ export default {
         }
       ]
     };
-  },
-  mounted() {
-    getMeeting().then(dataBack => {
-      let { message, code, data } = dataBack;
-      if (code != 230) {
-        console.log(message);
-      } else {
-
-        this.tableContent = data;
-        this.loading = false;
-        console.log(this.tableContent);
-        data.length;
-        // window.localStorage.setItem("user", JSON.stringify(data));
-      }
-    });
   }
 };
 </script>

@@ -102,15 +102,14 @@ export default {
       };
       addUser(regInfo).then(dataBack => {
         let { message, code, data } = dataBack;
+        this.loading = false;
         if (code != 210) {
           this.errorMessage = message;
           this.snackbar = true;
-          this.loading = false;
           console.log("注册异常");
         } else {
           data.length;
           // window.localStorage.setItem("user", JSON.stringify(data));
-          this.loading = false;
           this.$router.push({ path: "/" });
         }
       });

@@ -99,7 +99,8 @@ export default {
           console.log("登录异常");
         } else {
           data.length;
-          // window.localStorage.setItem("user", JSON.stringify(data));
+          window.localStorage.removeItem("user");
+          window.localStorage.setItem("user", JSON.stringify(data));
           this.loading = false;
           this.$router.push({ path: "/home/table" });
         }

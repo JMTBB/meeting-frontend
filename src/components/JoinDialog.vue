@@ -6,7 +6,7 @@
       </template>
       <v-card>
         <v-card-title>
-          <span class="headline">创建会议</span>
+          <span class="headline">参加会议</span>
         </v-card-title>
         <v-card-text>
           <v-container>
