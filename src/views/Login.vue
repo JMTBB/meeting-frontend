@@ -8,35 +8,6 @@
               <v-toolbar color="primary" dark flat>
                 <v-toolbar-title>登录</v-toolbar-title>
                 <v-spacer />
-
-                <!-- <v-tooltip bottom>
-                  <template v-slot:activator="{ on }">
-                    <v-btn
-                      :href="source"
-                      icon
-                      large
-                      target="_blank"
-                      v-on="on"
-                    >
-                      <v-icon>mdi-code-tags</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Source</span>
-                </v-tooltip>
-                <v-tooltip right>
-                  <template v-slot:activator="{ on }">
-                    <v-btn
-                      icon
-                      large
-                      href="https://codepen.io/johnjleider/pen/pMvGQO"
-                      target="_blank"
-                      v-on="on"
-                    >
-                      <v-icon>mdi-codepen</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Codepen</span>
-                </v-tooltip>-->
               </v-toolbar>
               <v-card-text>
                 <v-form ref="info" lazy-validation v-model="valid">
@@ -77,6 +48,13 @@
           </v-col>
         </v-row>
       </v-container>
+      <v-snackbar 
+      v-model="snackbar"
+      color="error"
+      >
+        {{ errorMessage }}
+        <v-btn color="black" text @click="snackbar = false">关闭</v-btn>
+      </v-snackbar>
     </v-content>
   </v-app>
 </template>
@@ -93,10 +71,12 @@ export default {
     valid: true,
     accountRules: [
       v => !!v || "请输入账号",
-      v => (v && v.length <= 10) || "账号小于10位"
+      v => v && /\d{3,10}/.test(v) || "账号为3-10位的数字"
     ],
     passwordRules: [v => !!v || "请输入密码"],
-    loading: false
+    loading: false,
+    snackbar: false,
+    errorMessage: ""
   }),
   props: {
     source: String
@@ -111,17 +91,19 @@ export default {
         isAdmin: false
       };
       requestLogin(subInfo).then(dataBack => {
-        let {message, code, data } = dataBack;
-        if(code != 200) {
-          message.length;
-          console.log("ttt");
-        }else {
-          data.length;
-          // window.localStorage.setItem("user", JSON.stringify(data)); 
+        let { message, code, data } = dataBack;
+        if (code != 200) {
+          this.errorMessage = message;
+          this.snackbar = true;
           this.loading = false;
-          this.$router.push({path: '/home/table'});
+          console.log("登录异常");
+        } else {
+          data.length;
+          // window.localStorage.setItem("user", JSON.stringify(data));
+          this.loading = false;
+          this.$router.push({ path: "/home/table" });
         }
-      })
+      });
     }
   },
   watch: {

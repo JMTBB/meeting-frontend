@@ -23,12 +23,14 @@
 
     <v-app-bar app clipped-left>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-toolbar-title>Application</v-toolbar-title>
+      <v-toolbar-title>会议管理系统</v-toolbar-title>
       <v-spacer />
 
       <v-menu bottom origin="center center" transition="scale-transition">
         <template v-slot:activator="{ on }">
-          <v-icon v-on="on">mdi-settings-outline</v-icon>
+          <v-btn icon>
+            <v-icon v-on="on">mdi-settings-outline</v-icon>
+          </v-btn>
         </template>
 
         <v-list>

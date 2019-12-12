@@ -3,12 +3,12 @@
     <v-col cols="12">
       <v-card>
         <v-card-title>
-          Nutrition
+          会议列表
           <v-spacer></v-spacer>
           <v-text-field
             v-model="search"
             append-icon="search"
-            label="Search"
+            label="搜索"
             single-line
             hide-details
           ></v-text-field>
