@@ -14,4 +14,5 @@ export const addUser = params => {return axios.post(`${base}/user`,params).then(
 export const addMeeting = params => { return axios.post(`${base}/meeting`, params).then(res => res.data); }
 export const getMeeting = params => { return axios.get(`${base}/meeting`, params).then(res => res.data); }
 export const getMeetingByUserId = params => { return axios.get(`${base}/meeting/${params}`).then(res => res.data); }
+export const getMeetingPassed = params => { return axios.get(`${base}/passing/${params}`).then(res => res.data);}
 

@@ -7,23 +7,29 @@
           <v-spacer></v-spacer>
           <v-text-field v-model="search" append-icon="search" label="搜索" single-line hide-details></v-text-field>
         </v-card-title>
-        <v-data-table 
-        :headers="tableHeader" 
-        :items="tableContent" 
-        :search="search"
-        :loading="loading"
-        loading-text="加载中..."
+        <v-data-table
+          :headers="tableHeader"
+          :items="tableContent"
+          :search="search"
+          :loading="loading"
+          loading-text="加载中..."
         ></v-data-table>
       </v-card>
+      <v-snackbar v-model="snackbar" color="error">
+        {{ errorMessage }}
+        <v-btn color="black" text @click="snackbar = false">关闭</v-btn>
+      </v-snackbar>
     </v-col>
   </v-row>
 </template>
 <script>
 // import { getMeeting } from "@/api/api";
-import { getMeetingByUserId } from '@/api/api';
+import { getMeetingByUserId } from "@/api/api";
 export default {
   data() {
     return {
+      snackbar: false,
+      errorMessage: "",
       loading: true,
       search: "",
       tableHeader: [
@@ -142,21 +148,19 @@ export default {
     };
   },
   mounted() {
-
     getMeetingByUserId(window.localStorage.getItem("user")).then(dataBack => {
       let { message, code, data } = dataBack;
       if (code != 231) {
         console.log(message);
+        this.errorMessage = message;
+        this.snackbar= true;
+        this.loading = false;
       } else {
-
         this.tableContent = data;
         this.loading = false;
-        console.log(this.tableContent);
-        data.length;
         // window.localStorage.setItem("user", JSON.stringify(data));
       }
     });
   }
-
 };
 </script>

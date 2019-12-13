@@ -245,26 +245,7 @@ export default {
       fullId: false,
       pTime: false,
       needRoom: false
-      // infoCollector: "",
-      // infoCollectorObj: {
-      //   name: false,
-      //   number: false,
-      //   gender: false,
-      //   org: false,
-      //   fullId: false,
-      //   pTime: false,
-      //   needRoom: false
-      // }
     },
-    computed: {
-      a() {
-        if (!this.dialog) {
-          this.$refs.form.resetValidation();
-        }
-        return this.dialog;
-      }
-    },
-
     meeting: {
       meetingDescription: "",
       meetingName: "",
@@ -281,16 +262,6 @@ export default {
       fullId: false,
       pTime: false,
       needRoom: false
-      // infoCollector: "",
-      // infoCollectorObj: {
-      //   name: false,
-      //   number: false,
-      //   gender: false,
-      //   org: false,
-      //   fullId: false,
-      //   pTime: false,
-      //   needRoom: false
-      // }
     }
   }),
   computed: {
