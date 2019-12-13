@@ -195,7 +195,7 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="red darken-1" text @click="dialog = false">取消</v-btn>
+            <v-btn color="red darken-1" text @click="dialog = false;reset()">取消</v-btn>
             <v-btn color="blue darken-1" text @click="handleCreate" :disabled="!valid">创建</v-btn>
           </v-card-actions>
         </v-form>
@@ -256,6 +256,14 @@ export default {
       //   needRoom: false
       // }
     },
+    computed: {
+      a() {
+        if (!this.dialog) {
+          this.$refs.form.resetValidation();
+        }
+        return this.dialog;
+      }
+    },
 
     meeting: {
       meetingDescription: "",
@@ -309,6 +317,12 @@ export default {
         Object.assign(this.meeting, this.meetBack);
         this.$refs.form.resetValidation();
       });
+    },
+    reset() {
+      this.$refs.form.reset();
+    },
+    resetValidation() {
+      this.$refs.form.resetValidation();
     }
   }
 };

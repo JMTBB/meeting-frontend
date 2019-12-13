@@ -61,7 +61,7 @@
           </v-col>
         </v-row>
       </v-container>
-      <v-snackbar v-model="snackbar" color="error">
+      <v-snackbar v-model="snackbar" :color="snackbarColor">
         {{ errorMessage }}
         <v-btn color="black" text @click="snackbar = false">关闭</v-btn>
       </v-snackbar>
@@ -89,7 +89,8 @@ export default {
 
     loading: false,
     snackbar: false,
-    errorMessage: ""
+    errorMessage: "",
+    snackbarColor: 'error',
   }),
   methods: {
     handleRegister() {
@@ -108,6 +109,9 @@ export default {
           this.snackbar = true;
           console.log("注册异常");
         } else {
+          this.snackbarColor = 'success';
+          this.errorMessage = message;
+          this.snackbar = true;
           data.length;
           // window.localStorage.setItem("user", JSON.stringify(data));
           this.$router.push({ path: "/" });

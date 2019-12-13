@@ -5,6 +5,9 @@ import Register from '../views/Register.vue'
 import Home from '../views/Home.vue'
 import Table from '../views/Table.vue'
 import Dialog from '../components/Dialog.vue'
+import CrudTable from '../components/CrudTable.vue'
+import JoinDialog from '../components/JoinDialog.vue'
+
 
 Vue.use(VueRouter)
 
@@ -26,6 +29,8 @@ const routes = [
     children: [
       {path: 'table', name: 'table', component: Table},
       {path: 'dialog', name: 'dialog', component: Dialog},
+      {path: 'crud', name: 'admin', component: CrudTable},
+      {path: 'detail', name: 'detail', component: JoinDialog}
     ]
   },
   {

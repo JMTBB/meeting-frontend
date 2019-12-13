@@ -19,7 +19,8 @@
   </v-row>
 </template>
 <script>
-import { getMeeting } from "@/api/api";
+// import { getMeeting } from "@/api/api";
+import { getMeetingByUserId } from '@/api/api';
 export default {
   data() {
     return {
@@ -141,9 +142,10 @@ export default {
     };
   },
   mounted() {
-    getMeeting().then(dataBack => {
+
+    getMeetingByUserId(window.localStorage.getItem("user")).then(dataBack => {
       let { message, code, data } = dataBack;
-      if (code != 230) {
+      if (code != 231) {
         console.log(message);
       } else {
 
@@ -155,5 +157,6 @@ export default {
       }
     });
   }
+
 };
 </script>
