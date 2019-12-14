@@ -102,7 +102,7 @@ export default {
           window.localStorage.removeItem("user");
           window.localStorage.setItem("user", JSON.stringify(data));
           this.loading = false;
-          this.$router.push({ path: "/home/table" });
+          this.$router.push({ path: "/home/crud" });
         }
       });
     }

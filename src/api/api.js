@@ -15,4 +15,8 @@ export const addMeeting = params => { return axios.post(`${base}/meeting`, param
 export const getMeeting = params => { return axios.get(`${base}/meeting`, params).then(res => res.data); }
 export const getMeetingByUserId = params => { return axios.get(`${base}/meeting/${params}`).then(res => res.data); }
 export const getMeetingPassed = params => { return axios.get(`${base}/passing/${params}`).then(res => res.data);}
+export const getJoinableMeeting = params => { return axios.get(`${base}/passing/${params}`).then(res => res.data );}
 
+
+//参会接口
+export const addEntry = params => { return axios.post(`${base}/userMeeting`, params).then(res => res.data); }

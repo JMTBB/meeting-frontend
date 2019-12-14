@@ -7,7 +7,7 @@
             <v-icon>mdi-view-dashboard-outline</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Dashboard</v-list-item-title>
+            <v-list-item-title>我的会议</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
         <v-list-item link @click="toTable">
@@ -15,7 +15,7 @@
             <v-icon>mdi-settings-outline</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Settings</v-list-item-title>
+            <v-list-item-title>可参加会议</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -64,10 +64,10 @@ export default {
   }),
   methods: {
     toDialog() {
-      this.$router.push("/home/dialog");
+      this.$router.push("/home/crud");
     },
     toTable() {
-      this.$router.push("/home/table");
+      this.$router.push("/home/join");
     }
   },
   created() {

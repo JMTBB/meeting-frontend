@@ -7,6 +7,7 @@ import Table from '../views/Table.vue'
 import Dialog from '../components/Dialog.vue'
 import CrudTable from '../components/CrudTable.vue'
 import JoinDialog from '../components/JoinDialog.vue'
+import JoinList from '../components/JoinableTable.vue'
 
 
 Vue.use(VueRouter)
@@ -30,7 +31,8 @@ const routes = [
       {path: 'table', name: 'table', component: Table},
       {path: 'dialog', name: 'dialog', component: Dialog},
       {path: 'crud', name: 'admin', component: CrudTable},
-      {path: 'detail', name: 'detail', component: JoinDialog}
+      {path: 'detail', name: 'detail', component: JoinDialog},
+      {path: 'join', name: 'join', component: JoinList }
     ]
   },
   {
