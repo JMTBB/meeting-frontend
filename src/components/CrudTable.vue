@@ -2,7 +2,10 @@
   <v-data-table :headers="tableHeader" :items="tableContent" class="elevation-1">
     <template v-slot:top>
       <v-toolbar flat color="white">
-        <v-toolbar-title>我的会议</v-toolbar-title>
+        <v-tabs>
+          <v-tab>发起的会议</v-tab>
+          <v-tab>参加的会议</v-tab>
+        </v-tabs>
         <v-divider class="mx-4" inset vertical></v-divider>
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" persistent max-width="600px">
@@ -211,32 +214,119 @@
             </v-form>
           </v-card>
         </v-dialog>
-        <v-dialog v-model="dialog2" width="300">
+        <v-dialog v-model="dialog2" width="600px">
           <v-card>
-            <v-card-title class="headline grey lighten-2" primary-title>扫码参加会议</v-card-title>
+            <!-- <v-card-title class="headline grey lighten-2" primary-title>扫码参加会议</v-card-title> -->
+            <v-card-title>基本信息</v-card-title>
 
-            <v-card-text><div class="" id="qrCode"></div></v-card-text>
+            <v-card-title>
+              会议名：
+              {{editingItem.meetingName}}
+            </v-card-title>
+            <v-card-text>
+              <div>
+                <small>会议概述：</small>
+                {{editingItem.meetingDescription}}
+              </div>
+            </v-card-text>
+
+            <v-card-text>
+              <v-sheet elevation="2">
+                <v-list-item>
+                  <v-list-item-subtitle>
+                    发起人：
+                    {{editingItem.sponsorId}}
+                  </v-list-item-subtitle>
+                </v-list-item>
+
+                <v-list-item>
+                  <v-list-item-subtitle>
+                    会议地点：
+                    {{editingItem.meetingLocation}}
+                  </v-list-item-subtitle>
+                </v-list-item>
+                <v-list-item>
+                  <v-list-item-subtitle>
+                    主要参会人：
+                    {{editingItem.meetingHosts}}
+                  </v-list-item-subtitle>
+                </v-list-item>
+                <v-list-item v-if="editingItem.needRoom">
+                  <v-list-item-subtitle>
+                    宾馆：
+                    {{editingItem.meetingHotel}}
+                  </v-list-item-subtitle>
+                </v-list-item>
+                <v-list-item>
+                  <v-list-item-subtitle>
+                    参会信息要求：
+                    {{editingItem.name ? '姓名': ''}}
+                    {{editingItem.number ? '电话': ''}}
+                    {{editingItem.gender ? '性别': ''}}
+                    {{editingItem.org ? '工作单位': ''}}
+                    {{editingItem.fullId ? '身份证号': ''}}
+                    {{editingItem.ptime ? '参会时间': ''}}
+                    {{editingItem.needRoom ? '是否需要安排房间': ''}}
+                  </v-list-item-subtitle>
+                </v-list-item>
+              </v-sheet>
+              <!-- <div class="my-4 subtitle-1 black--text"></div> -->
+            </v-card-text>
+
+            <v-card-text>
+              <v-chip-group active-class="deep-purple accent-4 white--text" column>
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on }">
+                    <v-chip v-on="on">
+                      <v-icon left>mdi-history</v-icon>
+                      {{editingItem.beginTime}}
+                    </v-chip>
+                  </template>
+                  <span>开始时间</span>
+                </v-tooltip>
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on }">
+                    <v-chip v-on="on">
+                      <v-icon left>mdi-update</v-icon>
+                      {{editingItem.endTime}}
+                    </v-chip>
+                  </template>
+                  <span>结束时间</span>
+                </v-tooltip>
+              </v-chip-group>
+            </v-card-text>
+            <v-divider class="mx-4"></v-divider>
+            <v-card-text align="center" justify="center" v-if="editingItem.pass">
+              <v-divider></v-divider>
+
+              <div class id="qrcode" ref="qrcode"></div>
+            </v-card-text>
+            <v-card-text v-else>会议审核中，无法生成二维码</v-card-text>
 
             <v-divider></v-divider>
 
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="primary" text @click="dialog2 = false">I accept</v-btn>
+              <v-btn
+                color="primary"
+                text
+                @click="dialog2 = false;closeCode(editingItem.pass)"
+              >I accept</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
       </v-toolbar>
+      <v-snackbar v-model="snackbar" :color="snackbarColor">
+        {{ promptMessage }}
+        <v-btn color="black" text @click="snackbar = false">关闭</v-btn>
+      </v-snackbar>
     </template>
     <template v-slot:item.action="{ item }">
-      <v-icon small class="mr-2" @click="dialog2 = true;">mdi-qrcode</v-icon>
+      <v-icon small class="mr-2" @click="handleQR(item)">mdi-qrcode</v-icon>
       <v-icon small @click="deleteItem(item)">mdi-delete-outline</v-icon>
     </template>
     <template v-slot:item.pass="{ item }">
-    <v-chip :color="item.pass ? 'green' : 'orange'" dark>
-      {{item.pass ? '已上线' : '审核中'}}
-    </v-chip>
-        
-      
+      <v-chip :color="item.pass ? 'green' : 'orange'" dark>{{item.pass ? '已上线' : '审核中'}}</v-chip>
     </template>
     <!-- editItem(item) -->
     <!-- <template v-slot:no-data>
@@ -248,7 +338,7 @@
 <script>
 import { addMeeting } from "@/api/api";
 import { getMeetingByUserId } from "@/api/api";
-import QRCode from 'qrcodejs2';
+import QRCode from "qrcodejs2";
 export default {
   data: () => ({
     qrCode: null,
@@ -258,6 +348,7 @@ export default {
     dialog2: false,
     loading: false,
     search: "",
+
     snackbar: false,
     promptMessage: "",
     snackbarColor: "error",
@@ -314,7 +405,7 @@ export default {
       { text: "开始时间", value: "beginTime" },
       { text: "结束时间", value: "endTime" },
       { text: "会议地点", value: "meetingLocation" },
-      { text: "状态", value: "pass"},
+      { text: "状态", value: "pass" },
       { text: "操作", value: "action", sortable: false }
     ],
     tableContent: [
@@ -357,6 +448,26 @@ export default {
       fat: 0,
       carbs: 0,
       protein: 0
+    },
+    //弹出参加框上方数据 和用户所需填写数据
+    editingItem: {
+      meetingId: 0,
+      meetingDescription: "",
+      meetingName: "",
+      sponsorId: 0,
+      beginTime: "",
+      endTime: "",
+      meetingLocation: "",
+      meetingHosts: "",
+      meetingHotel: "",
+      name: false,
+      number: false,
+      gender: false,
+      org: false,
+      fullId: false,
+      needRoom: false,
+      ptime: false,
+      pass: false
     }
   }),
   computed: {
@@ -417,21 +528,47 @@ export default {
         }
       });
     },
-    getQRCode() {
-      setTimeout(() => {
-        this.bindQRCode();
-      }, 400);
-    },
-    bindQRCode: function() {
-      this.qrCode = new QRCode(this.$refs.qrCodeDiv, {
-        text: "https://www.baidu.com",
-        width: 200,
-        height: 200,
-        colorDark: "#333333", //二维码颜色
-        colorLight: "#ffffff", //二维码背景色
-        correctLevel: QRCode.CorrectLevel.L //容错率，L/M/H
+
+    // 展示二维码
+    payOrder() {
+      this.innerVisible = true;
+      // 二维码内容,一般是由后台返回的跳转链接,这里是写死的一个链接
+      this.qrcode = "https://yuchengkai.cn/docs/frontend/#typeof";
+      // 使用$nextTick确保数据渲染
+      this.$nextTick(() => {
+        this.crateQrcode();
       });
+    },
+    // 生成二维码
+    crateQrcode() {
+      this.qr = new QRCode("qrcode", {
+        width: 150,
+        height: 150, // 高度
+        text: this.qrcode // 二维码内容
+        // render: 'canvas' // 设置渲染方式（有两种方式 table和canvas，默认是canvas）
+        // background: '#f0f'
+        // foreground: '#ff0'
+      });
+      // console.log(this.qrcode)
+    },
+    // 关闭弹框,清除已经生成的二维码
+    closeCode(pass) {
+      if (pass) {
+        this.$refs.qrcode.innerHTML = "";
+      }
+    },
+    handleQR(item) {
+      this.editingItem = item;
+      if (item.pass) {
+        this.payOrder();
+      } else {
+        this.promptMessage = "会议审核中，无法生成二维码";
+        console.log(this.promptMessage);
+        this.snackbar = true;
+      }
+      this.dialog2 = true;
     }
+
     // editItem(item) {
     //   this.editedIndex = this.desserts.indexOf(item);
     //   this.editedItem = Object.assign({}, item);
@@ -463,3 +600,8 @@ export default {
   }
 };
 </script>
+<style scoped>
+#qrcode {
+  margin-top: 20px;
+}
+</style>
