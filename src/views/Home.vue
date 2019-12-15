@@ -4,18 +4,19 @@
       <v-list dense>
         <v-list-item link @click="toDialog">
           <v-list-item-action>
-            <v-icon>mdi-view-dashboard-outline</v-icon>
+            <v-icon>{{curIcons[0]}}</v-icon>
+            <!-- mdi-view-dashboard-outline -->
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>我的会议</v-list-item-title>
+            <v-list-item-title>{{curItems[0]}}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
         <v-list-item link @click="toTable">
           <v-list-item-action>
-            <v-icon>mdi-settings-outline</v-icon>
+            <v-icon>{{curIcons[1]}}</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>可参加会议</v-list-item-title>
+            <v-list-item-title>{{curItems[1]}}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -60,10 +61,23 @@ export default {
     source: String
   },
   data: () => ({
-    drawer: null
+    drawer: null,
+    drawerItems: ["我的会议", "可参加会议"],
+    drawerItemIcons: ["mdi-book-open-outline", "mdi-checkbook"],
+    curItems: [],
+    curIcons: [],
+    drawerItemsAdmin: ["会议管理", "用户管理"],
+    drawerItemIconsAdmin: [
+      "mdi-view-dashboard-outline",
+      "mdi-account-multiple-outline"
+    ]
   }),
   methods: {
     toDialog() {
+      if(JSON.parse(window.localStorage.getItem("admin"))) {
+        this.$router.push("/home/admin")
+      }
+
       this.$router.push("/home/crud");
     },
     toTable() {
@@ -72,6 +86,14 @@ export default {
   },
   created() {
     this.$vuetify.theme.dark = false;
+    if (this.$route.params.admin) {
+      this.curItems = this.drawerItemsAdmin;
+      this.curIcons = this.drawerItemIconsAdmin;
+      this.$router.push("/home/admin");
+    } else {
+      this.curItems = this.drawerItems;
+      this.curIcons = this.drawerItemIcons;
+    }
   }
 };
 </script>

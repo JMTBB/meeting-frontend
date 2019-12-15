@@ -8,6 +8,8 @@ import Dialog from '../components/Dialog.vue'
 import CrudTable from '../components/CrudTable.vue'
 import JoinDialog from '../components/JoinDialog.vue'
 import JoinList from '../components/JoinableTable.vue'
+import AdminTable from '../components/AdminTable.vue'
+import SingleDetail from '../views/detail.vue'
 
 
 Vue.use(VueRouter)
@@ -28,11 +30,13 @@ const routes = [
     name: 'Home',
     component: Home,
     children: [
-      {path: 'table', name: 'table', component: Table},
-      {path: 'dialog', name: 'dialog', component: Dialog},
-      {path: 'crud', name: 'admin', component: CrudTable},
-      {path: 'detail', name: 'detail', component: JoinDialog},
-      {path: 'join', name: 'join', component: JoinList }
+      {path: 'table', name: 'Table', component: Table},
+      {path: 'dialog', name: 'Tialog', component: Dialog},
+      {path: 'crud', name: 'Crud', component: CrudTable},
+      {path: 'detail', name: 'Detail', component: JoinDialog},
+      {path: 'join', name: 'Join', component: JoinList },
+      {path: 'admin', name: 'Admin', component: AdminTable },
+      {path: 'qr', name: 'QR', component: SingleDetail},
     ]
   },
   {

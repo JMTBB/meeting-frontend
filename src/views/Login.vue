@@ -92,17 +92,31 @@ export default {
       };
       requestLogin(subInfo).then(dataBack => {
         let { message, code, data } = dataBack;
-        if (code != 200) {
-          this.errorMessage = message;
-          this.snackbar = true;
-          this.loading = false;
-          console.log("登录异常");
-        } else {
+        if (code == 200) {
           data.length;
           window.localStorage.removeItem("user");
           window.localStorage.setItem("user", JSON.stringify(data));
           this.loading = false;
           this.$router.push({ path: "/home/crud" });
+        }else if(code == 201){
+          window.localStorage.setItem("user", JSON.stringify(data));
+          window.localStorage.setItem("admin",true);
+          this.$router.push({
+            name: 'Home',
+            params:{ admin : true, }
+          })
+        } 
+        else {
+          this.errorMessage = message;
+          this.snackbar = true;
+          this.loading = false;
+          console.log("登录异常");
+
+
+
+
+
+
         }
       });
     }
