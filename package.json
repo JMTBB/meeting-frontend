@@ -14,7 +14,7 @@
     "vue": "^2.6.10",
     "vue-json-excel": "^0.2.98",
     "vue-router": "^3.1.3",
-    "vuetify": "^2.1.13"
+    "vuetify": "^2.1.15"
   },
   "devDependencies": {
     "@mdi/font": "^4.7.95",

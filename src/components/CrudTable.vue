@@ -334,7 +334,7 @@
               color="primary"
               text
               @click="dialog2 = false;closeCode(editingItem.pass)"
-            >I accept</v-btn>
+            >好的</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -384,7 +384,7 @@ import { getPartInfo } from '@/api/api'
 import QRCode from "qrcodejs2";
 export default {
   data: () => ({
-    base: 'http://192.168.1.104:8082',
+    base: 'http://192.168.43.180:8082/',
     mid: '/#/home/qr?id=',
     fullLink: '',
 

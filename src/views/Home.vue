@@ -74,11 +74,11 @@ export default {
   }),
   methods: {
     toDialog() {
-      if(JSON.parse(window.localStorage.getItem("admin"))) {
-        this.$router.push("/home/admin")
+      if (JSON.parse(window.localStorage.getItem("admin"))) {
+        this.$router.push("/home/admin");
+      } else {
+        this.$router.push("/home/crud");
       }
-
-      this.$router.push("/home/crud");
     },
     toTable() {
       this.$router.push("/home/join");

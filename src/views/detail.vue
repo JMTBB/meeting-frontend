@@ -106,8 +106,7 @@
               prepend-icon="mdi-id-card"
               v-model="infoCollector.fullId"
               :rules="[ 
-                            v => !!v || '请填写身份证号',
-                            v => v && /\d{16}(\d(\d|\w))?/.test(v) || '身份证号格式有误'
+                            v => !!v || '请填写身份证号'
                           ]"
             ></v-text-field>
           </v-col>
@@ -176,7 +175,7 @@
     <v-card-actions>
       <v-spacer></v-spacer>
       <v-btn color="red" text @click="dialog = false">取消</v-btn>
-      <v-btn :disabled="!valid" color="deep-purple accent-4" text>参加</v-btn>
+      <v-btn :disabled="!valid" @click="handleJoin" color="deep-purple accent-4" text>参加</v-btn>
       <v-snackbar v-model="snackbar" color="error">
         {{ prompt }}
         <v-btn color="black" text @click="snackbar = false">关闭</v-btn>
@@ -186,6 +185,8 @@
 </template>
 
 <script>
+import { addEntry } from "@/api/api";
+
 import { getSingleMeetingById } from "@/api/api";
 export default {
   data: () => ({
@@ -209,6 +210,8 @@ export default {
       ptime: false,
       pass: false
     },
+    genderItem: ["男", "女"],
+
     //保存用户提交的信息
     infoCollector: {
       ploginId: 0,
@@ -236,7 +239,11 @@ export default {
     loading: false,
     snackbar: false,
     prompt: "",
-    valid: false
+    valid: false,
+    menuDateStart: false,
+    dateStart: new Date().toISOString().substr(0, 10),
+    menuTimeStart: false,
+    timeStart: "10:00"
   }),
   methods: {
     getdata() {
@@ -253,6 +260,25 @@ export default {
           // window.localStorage.setItem("user", JSON.stringify(data));
         }
       });
+    },
+    handleJoin() {
+      this.infoCollector.ploginId = parseInt(
+        JSON.parse(window.localStorage.getItem("user"))
+      );
+      this.infoCollector.pmeetingId = this.editingItem.meetingId;
+      this.infoCollector.ptime = this.dateStart + " " + this.timeStart + ":00";
+      console.log(this.infoCollector);
+      addEntry(this.infoCollector).then(dataBack => {
+        let { message, code, data } = dataBack;
+        console.log(message);
+        console.log(data);
+        console.log(code);
+      });
+
+      setTimeout(() => {
+        this.$router.push({ path: "/home/crud" });
+      }, 1000);
+      console.log("刷新");
     }
   },
   created: function() {
@@ -261,8 +287,8 @@ export default {
       if (!JSON.parse(window.localStorage.getItem("user"))) {
         this.prompt = "未登录";
         this.snackbar = true;
-        setTimeout(this.$router.push({ path: "/" }), 1000);
-        
+        let id = this.id;
+        setTimeout(this.$router.push({ path: `/?id=${id}` }), 1000);
       }
     } else {
       this.prompt = "参数获取失败";

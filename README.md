@@ -1,4 +1,6 @@
-# ui_meeting
+# Meeting management with vue
+
+the frontend of the meeting management system.
 
 ## Project setup
 ```

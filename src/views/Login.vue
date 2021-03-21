@@ -28,6 +28,9 @@
                     required
                     :rules="passwordRules"
                   />
+
+
+                  
                 </v-form>
               </v-card-text>
               <v-card-actions>
@@ -48,10 +51,7 @@
           </v-col>
         </v-row>
       </v-container>
-      <v-snackbar 
-      v-model="snackbar"
-      color="error"
-      >
+      <v-snackbar v-model="snackbar" color="error">
         {{ errorMessage }}
         <v-btn color="black" text @click="snackbar = false">关闭</v-btn>
       </v-snackbar>
@@ -71,7 +71,7 @@ export default {
     valid: true,
     accountRules: [
       v => !!v || "请输入账号",
-      v => v && /\d{3,10}/.test(v) || "账号为3-10位的数字"
+      v => (v && /\d{3,10}/.test(v)) || "账号为3-10位的数字"
     ],
     passwordRules: [v => !!v || "请输入密码"],
     loading: false,
@@ -95,28 +95,26 @@ export default {
         if (code == 200) {
           data.length;
           window.localStorage.removeItem("user");
+          window.localStorage.removeItem("admin");
           window.localStorage.setItem("user", JSON.stringify(data));
           this.loading = false;
-          this.$router.push({ path: "/home/crud" });
-        }else if(code == 201){
+          if (this.$route.query.id) {
+            this.$router.push({ path: `/home/qr?id=${this.$route.query.id}` });
+          } else {
+            this.$router.push({ path: "/home/crud" });
+          }
+        } else if (code == 201) {
           window.localStorage.setItem("user", JSON.stringify(data));
-          window.localStorage.setItem("admin",true);
+          window.localStorage.setItem("admin", true);
           this.$router.push({
-            name: 'Home',
-            params:{ admin : true, }
-          })
-        } 
-        else {
+            name: "Home",
+            params: { admin: true }
+          });
+        } else {
           this.errorMessage = message;
           this.snackbar = true;
           this.loading = false;
           console.log("登录异常");
-
-
-
-
-
-
         }
       });
     }
